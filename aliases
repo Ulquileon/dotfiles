@@ -7,3 +7,102 @@ alias serve='ruby -run -e httpd . -p 8000' # Or python -m SimpleHTTPServer :)
 
 # NOTE: On Q3 2021, Le Wagon decided to change the Web Dev curriculum default text editor
 alias stt="echo 'Launching VS Code instead of Sublime Text... (cf ~/.aliases)' && code ."
+
+# Jupyter Notebook aliases
+alias jn='jupyter notebook --no-browser & sleep 2 && explorer.exe "http://localhost:8888"'
+# alias jl='jupyter lab --no-browser & sleep 2 && explorer.exe "http://localhost:8888/lab"'
+
+# System and WSL commands aliases
+alias update='sudo apt update && sudo apt upgrade -y'    # Met à jour tout en une ligne
+alias c='clear'                                           # Raccourci pour clear
+alias ..='cd ..'                                          # Monte d’un dossier
+alias ...='cd ../..'                                      # Monte de deux dossiers
+alias ll='ls -alh'                                        # Affichage complet et lisible
+
+# Git aliases
+alias gs='git status'
+alias ga='git add .'
+alias gc='git commit -m'
+alias gp='git push'
+alias gl='git pull'
+alias gb='git branch'
+alias gco='git checkout'
+alias gcm='git checkout master'
+
+# 🔧 Pyenv & virtualenv
+alias pyev='pyenv versions'                        # Affiche toutes les versions installées
+alias pyea='pyenv activate'                        # Activation manuelle (tu complètes le nom ensuite)
+alias pyed='pyenv deactivate'                      # Désactive l’environnement actif
+alias pyel='pyenv local'                           # Définit l’env local pour le dossier courant
+alias pyen='pyenv install'                         # Pour installer une nouvelle version
+alias pyevenv='pyenv virtualenv'                   # Pour créer un nouvel env virtuel
+
+# 🧼 Reset
+alias pyereset='pyenv deactivate && pyenv local --unset'  # Désactive + désassocie un env du dossier
+
+# 🧠 Bonus
+alias whichpython='python --version && which python'     # Vérifie la version et le chemin
+
+
+# Personal aliases
+alias serve='python3 -m http.server'    # Lance un petit serveur local dans le dossier courant
+alias train='cd ~/Python_Training'            # Va directement dans ton dossier de projets (à adapter)
+alias exp='explorer.exe' # Ouvre l'explorateur de fichiers Windows
+alias py='python' # Lance la version par défaut de Python
+
+# ====  Function for opening a project directory with it's related pyenv environment and optionaly launching jupyter notebook ====
+# Usage: jdev dossier_projet environnement [--jupyter] or [-j]"
+# Example: jdev my_project my_env --jupyter
+# Example: jdev my_project my_env -j
+# Example: jdev my_project my_env
+
+jdev() {
+  local folder=""
+  local env=""
+  local launch_jupyter=false
+
+  # Parse arguments
+  for arg in "$@"; do
+    case $arg in
+      -j|--jupyter)
+        launch_jupyter=true
+        shift
+        ;;
+      *)
+        if [ -z "$folder" ]; then
+          folder="$arg"
+        elif [ -z "$env" ]; then
+          env="$arg"
+        else
+          echo "❌ Trop d’arguments. Utilisation : jdev dossier_projet environnement [--jupyter]"
+          return 1
+        fi
+        ;;
+    esac
+  done
+
+  if [ -z "$folder" ] || [ -z "$env" ]; then
+    echo "❌ Utilisation : jdev dossier_projet environnement [--jupyter]"
+    return 1
+  fi
+
+  # Navigation
+  cd ~/"$folder" || {
+    echo "❌ Dossier introuvable : $folder"
+    return 1
+  }
+
+  # Activation de l’environnement
+  pyenv activate "$env" || {
+    echo "❌ Impossible d’activer l’environnement : $env"
+    return 1
+  }
+
+  echo "✅ Projet : $folder | Environnement activé : $env"
+
+  # Lancement de Jupyter Notebook si demandé
+  if [ "$launch_jupyter" = true ]; then
+    echo "🚀 Lancement de Jupyter Notebook..."
+    jnb  # appel à ton alias personnalisé (ajuste si besoin)
+  fi
+}
