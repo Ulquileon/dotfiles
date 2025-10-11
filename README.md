@@ -35,36 +35,52 @@ Ce dépôt contient toute la configuration nécessaire pour reconstruire mon set
 │   └── setup_symlinks.sh    # Crée tous les liens symboliques (zshrc, aliases, bin, etc.)
 │
 └── README.md
+```
 
-⚙️ Installation rapide (nouvelle machine)
+## ⚙️ Installation rapide (nouvelle machine)
 
-    🧩 1. Cloner le dépôt
+### 🧩 1. Cloner le dépôt
 
-        ⚠️ Nécessite une clé SSH configurée et ton alias github.com-personal dans ~/.ssh/config
+⚠️ Nécessite une clé SSH configurée et ton alias `github.com-personal` dans `~/.ssh/config`.
 
-        git clone git@github.com-personal:Ulquileon/dotfiles.git ~/.files
+```bash
+git clone git@github.com-personal:Ulquileon/dotfiles.git ~/.files
+```
 
-    ⚙️ 2. Lancer l’installation
-        bash ~/.files/setup/install.sh
+---
 
+### ⚙️ 2. Lancer l’installation
 
-        Le script :
-            installe Zsh, Git, Oh My Zsh
-            crée tous les liens symboliques
-            ajoute les plugins Zsh nécessaires
-            active ton environnement complet
+```bash
+bash ~/.files/setup/install.sh
+```
 
-    🚀 3. Redémarre ton shell
-        exec zsh
+Le script :
+- installe **Zsh**, **Git**, **Oh My Zsh**
+- crée tous les **liens symboliques**
+- ajoute les **plugins Zsh** nécessaires
+- active ton **environnement complet**
 
-🛠️ Réinstallation complète (mode “machine vierge”)
+---
 
-    Sur un Ubuntu/WSL tout neuf (sans même Git) :
+### 🚀 3. Redémarre ton shell
 
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ulquileon/dotfiles/main/setup/bootstrap.sh)"
+```bash
+exec zsh
+```
 
-    Ce script :
-        Installe Git si absent
-        Clone ton dépôt .files
-        Lance automatiquement install.sh
-        Configure tout ton environnement
+---
+
+## 🛠️ Réinstallation complète (mode “machine vierge”)
+
+> Sur un Ubuntu/WSL tout neuf (sans même Git) :
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ulquileon/dotfiles/main/setup/bootstrap.sh)"
+```
+
+Ce script :
+- installe **Git** si absent
+- clone ton dépôt `.files`
+- lance automatiquement `install.sh`
+- configure tout ton environnement
