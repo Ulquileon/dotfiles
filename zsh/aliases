@@ -1,0 +1,125 @@
+########################################
+# 🏠 NAVIGATION
+########################################
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias ~='cd ~'
+
+# Dossiers principaux
+alias cdc='cd ~/code'
+alias cdp='cd ~/code/personal'
+alias cds='cd ~/code/school'
+alias cdt='cd ~/code/training'
+alias cdtpl='cd ~/code/templates'
+alias cdb='cd ~/bin'
+alias cdd='cd ~/data'
+
+# ls pratiques
+alias ll='ls -alF --color=auto'
+alias la='ls -A'
+alias l='ls -CF'
+
+########################################
+# ⚙️ SYSTÈME & UTILITAIRES
+########################################
+alias cls='clear'
+alias reload='source ~/.zshrc'
+alias update='sudo apt update && sudo apt upgrade -y'
+alias path='echo -e ${PATH//:/\\n}'
+alias df='df -h'
+alias du='du -sh *'
+alias h='history'
+
+# IP et Speedtest
+alias myip='curl -s https://ipinfo.io/json'
+# version sécurisée du speedtest (paquet officiel)
+command -v speedtest >/dev/null 2>&1 || alias speedtest='speedtest'
+
+# Explorateur Windows
+alias exp='explorer.exe'  # ouvre l'explorateur de fichiers Windows
+
+# Serveur HTTP rapide
+alias serve='python3 -m http.server'
+
+########################################
+# 🐍 PYTHON
+########################################
+alias py='python'  # alias générique pour python
+alias act='. .venv/bin/activate'    # Active un venv local
+alias pipup='pip install --upgrade pip'
+alias req='pip install -r requirements.txt'
+alias whichpython='python --version && which python'
+
+# --- Pyenv (si installé) ---
+if command -v pyenv >/dev/null 2>&1; then
+  alias pyev='pyenv versions'
+  alias pyea='pyenv activate'
+  alias pyed='pyenv deactivate'
+  alias pyel='pyenv local'
+  alias pyeg='pyenv global'
+  alias pyen='pyenv install'
+  alias pyevenv='pyenv virtualenv'
+  alias pyereset='pyenv deactivate && pyenv local --unset'
+fi
+
+########################################
+# 📓 JUPYTER
+########################################
+alias jn='jupyter notebook --no-browser & sleep 2 && explorer.exe "http://localhost:8888"'
+# alias jl='jupyter lab --no-browser & sleep 2 && explorer.exe "http://localhost:8888/lab"'
+
+########################################
+# 🐙 GIT
+########################################
+alias g='git'
+alias gs='git status'
+alias ga='git add .'
+alias gc='git commit -m'
+alias gp='git push'
+alias gl='git pull'
+alias gco='git checkout'
+alias gb='git branch'
+alias gd='git diff'
+alias gundo='git reset --soft HEAD~1'
+alias gundo-hard='git reset --hard HEAD~1'
+alias gclean='git clean -fd && git reset --hard'
+alias gprune='git fetch --prune'
+alias gwho='git config user.name && git config user.email'
+alias gmain='git checkout main'
+
+########################################
+# 🐳 DOCKER
+########################################
+alias d='docker'
+alias dc='docker compose'
+alias dps='docker ps --format "table {{.Names}}\\t{{.Status}}\\t{{.Ports}}"'
+alias dclean='docker system prune -af && docker volume prune -f'
+alias dimages='docker images'
+alias dlogs='docker logs -f'
+alias dup='docker compose up -d'
+alias ddown='docker compose down'
+
+########################################
+# 🧰 DIVERS / RACC. UTILES
+########################################
+alias ip='ip addr show'
+alias ports='ss -tulpen'   # plus moderne que netstat
+alias c='code .'           # ouvre VS Code dans le dossier courant
+alias pathsort='echo $PATH | tr ":" "\n" | sort'
+alias stt="echo 'Launching VS Code...' && code ."
+
+########################################
+# 🚀 PERSO (ajoute tes alias ici)
+########################################
+# === CUSTOM SCRIPTS ===
+# Accès rapide à tes outils persos
+alias jdev='~/.files/bin/jdev'
+alias gclone='~/.files/bin/gclone'
+
+# (Optionnel) — ouvre ton dossier .files ou bin
+alias cdfiles='cd -P ~/.files'
+
+########################################
+# 🔚 FIN DU FICHIER
+########################################

@@ -1,0 +1,38 @@
+# ======================
+# 🦎  CONFIGURATION DE BASE ZSH - Ulquileon
+# ======================
+
+# Thème minimal lisible
+ZSH_THEME="robbyrussell"
+
+# Plugins essentiels
+plugins=(
+  git
+  zsh-syntax-highlighting
+  zsh-autosuggestions
+)
+
+# Source oh-my-zsh
+export ZSH="$HOME/.oh-my-zsh"
+source $ZSH/oh-my-zsh.sh
+
+# Historique
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+
+# Aliases perso
+if [ -f "$HOME/.aliases" ]; then
+  source "$HOME/.aliases"
+fi
+
+# Couleurs & prompt clair
+#autoload -Uz colors && colors
+#PROMPT='%{$fg[cyan]%}%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%}:%{$fg[yellow]%}%~%{$reset_color%}$ '
+
+# ======================
+#  FIN CONFIG
+# ======================
+
+# Load personal aliases
+[ -f "$HOME/.files/zsh/aliases" ] && source "$HOME/.files/zsh/aliases"

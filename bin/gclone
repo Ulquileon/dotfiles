@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# gclone owner/repo [dest]
+# Choisit automatiquement l'hôte SSH selon le dossier courant:
+#  - ~/code/personal/* -> github.com-personal
+#  - ~/code/school/*   -> github.com-school
+# Par défaut: github.com-personal
+
+set -euo pipefail
+
+usage(){ echo "Usage: gclone owner/repo [dest] | gclone git@... | gclone https://..."; exit 1; }
+[ $# -ge 1 ] || usage
+
+arg="$1"; dest="${2:-}"
+
+# Détermine l'hôte
+case "$PWD" in
+  "$HOME/code/personal"/*) host="github.com-personal" ;;
+  "$HOME/code/school"/*)   host="github.com-school" ;;
+  *)                       host="github.com-personal" ;;
+esac
+
+# Construire l'URL
+build_url() {
+  local in="$1"
+  # URL déjà complète SSH vers github.com -> remap vers host choisi
+  if [[ "$in" == git@github.com:* ]]; then
+    echo "${in/git@github.com:/git@${host}:}"
+  # Autre URL complète (ssh d'un autre host, https...) -> garder tel quel
+  elif [[ "$in" =~ ^(git@|https?://) ]]; then
+    echo "$in"
+  else
+    # owner/repo or owner/repo.git
+    [[ "$in" == *.git ]] || in="${in}.git"
+    echo "git@${host}:${in}"
+  fi
+}
+
+url="$(build_url "$arg")"
+
+echo "→ Clonage via ${host}: ${url}"
+if [[ -n "$dest" ]]; then
+  git clone "$url" "$dest"
+else
+  git clone "$url"
+fi

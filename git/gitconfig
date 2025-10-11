@@ -1,0 +1,38 @@
+#############################################
+# 🌍 CONFIG GLOBALE GIT (~/.files/git/gitconfig)
+#############################################
+
+# === Identité par défaut (fallback) ===
+[user]
+    name = Ulquileon
+    email = pierre.lebair@outlook.fr
+
+# === Paramètres généraux ===
+[color]
+    ui = auto
+
+[core]
+    editor = code --wait
+    autocrlf = input
+    excludesfile = /home/ulquileon/.files/git/gitignore_global
+
+[init]
+    defaultBranch = main
+
+# === Aliases utiles ===
+[alias]
+    st = status -sb
+    co = checkout
+    br = branch
+    cm = commit -m
+    df = diff
+    lg = log --oneline --graph --decorate
+    pl = pull --rebase
+    who = config user.name && git config user.email
+
+# === Inclusion automatique d'identités ===
+[includeIf "gitdir:/home/ulquileon/code/personal/"]
+    path = /home/ulquileon/.files/git/gitconfig-personal
+
+[includeIf "gitdir:/home/ulquileon/code/school/"]
+    path = /home/ulquileon/.files/git/gitconfig-school

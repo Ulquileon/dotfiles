@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# jdev: ouvre un projet sous ~/code, active l'env Python (pyenv ou .venv)
+# Usage: jdev <sous-chemin-code> <env> [--jupyter|-j]
+# Ex:    jdev personal/monprojet myenv --jupyter
+
+set -euo pipefail
+
+relpath="" env="" launch_jupyter=false
+
+# --- parse args ---
+for arg in "$@"; do
+  case "$arg" in
+    -j|--jupyter) launch_jupyter=true ;;
+    *)
+      if [[ -z "$relpath" ]]; then relpath="$arg"
+      elif [[ -z "$env" ]]; then env="$arg"
+      else
+        echo "❌ Trop d’arguments. Usage: jdev <sous-chemin-code> <env> [--jupyter]" >&2
+        exit 1
+      fi
+      ;;
+  esac
+done
+
+if [[ -z "${relpath}" || -z "${env}" ]]; then
+  echo "❌ Usage: jdev <sous-chemin-code> <env> [--jupyter]" >&2
+  echo "   ex: jdev personal/monprojet myenv --jupyter" >&2
+  exit 1
+fi
+
+target="$HOME/code/$relpath"
+cd "$target" 2>/dev/null || { echo "❌ Dossier introuvable: $target" >&2; exit 1; }
+
+# --- activer environnement ---
+if command -v pyenv >/dev/null 2>&1; then
+  if ! pyenv activate "$env"; then
+    echo "❌ pyenv: impossible d’activer '$env'." >&2
+    exit 1
+  fi
+  echo "✅ Projet: $target | pyenv activé: $env"
+elif [[ -f ".venv/bin/activate" ]]; then
+  # shellcheck disable=SC1091
+  . .venv/bin/activate
+  echo "✅ Projet: $target | .venv activé"
+else
+  echo "ℹ️ Aucun environnement trouvé (ni pyenv '$env', ni .venv)."
+fi
+
+# --- lancer Jupyter éventuellement ---
+if [[ "$launch_jupyter" == true ]]; then
+  echo "🚀 Lancement de Jupyter Notebook..."
+  nohup jupyter notebook --no-browser >/dev/null 2>&1 &
+  sleep 2
+  explorer.exe "http://localhost:8888" >/dev/null 2>&1 || true
+fi
