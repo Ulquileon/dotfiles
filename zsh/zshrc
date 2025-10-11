@@ -21,6 +21,11 @@ HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 
+# === PATH custom (scripts perso) ===
+if [ -d "$HOME/bin" ]; then
+  export PATH="$HOME/bin:$PATH"
+fi
+
 # Aliases perso
 if [ -f "$HOME/.aliases" ]; then
   source "$HOME/.aliases"
