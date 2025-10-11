@@ -116,6 +116,7 @@ alias stt="echo 'Launching VS Code...' && code ."
 # Accès rapide à tes outils persos
 alias jdev='~/.files/bin/jdev'
 alias gclone='~/.files/bin/gclone'
+alias docheck="dotfiles-doctor"
 
 # (Optionnel) — ouvre ton dossier .files ou bin
 alias cdfiles='cd -P ~/.files'
