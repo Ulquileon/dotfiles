@@ -33,6 +33,7 @@ Ce dépôt contient toute la configuration nécessaire pour reconstruire mon set
 │   ├── bootstrap.sh         # Installe Git + clone les dotfiles + lance install.sh
 │   ├── install.sh           # Installe Zsh + Oh My Zsh + dépendances
 │   └── setup_symlinks.sh    # Crée tous les liens symboliques (zshrc, aliases, bin, etc.)
+│   └── dotfiles-doctor.sh   # Vérifie l'intégrité du setup (liens, dossiers, etc...)
 │
 └── README.md
 ```
