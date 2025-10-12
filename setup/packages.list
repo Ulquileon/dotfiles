@@ -1,0 +1,67 @@
+############################################################
+# 📦 PACKAGES.LIST — Dépendances système du setup .files
+# ----------------------------------------------------------
+# Ce fichier recense les paquets nécessaires au bon
+# fonctionnement du setup sous WSL Ubuntu 24.04.
+#
+# ✅ Objectif :
+#   - Faciliter la réinstallation complète d’un environnement
+#   - Permettre aux scripts de vérification de contrôler la cohérence
+#   - Servir de source unique de vérité pour les dépendances système
+#
+# 💡 Installation complète :
+#   sudo apt update && xargs -a ~/.files/setup/packages.list sudo apt install -y
+#
+# 🧠 Bonnes pratiques :
+#   - Classer les paquets par catégorie fonctionnelle
+#   - Ajouter un commentaire court précisant leur usage
+#   - Tenir ce fichier à jour à chaque ajout de dépendance
+############################################################
+
+
+########################
+# 🧩 Core Shell & Utilities
+########################
+zsh                 # Shell principal
+git                 # Contrôle de version
+curl                # Téléchargement depuis le web
+wget                # Alternative à curl
+unzip               # Décompression d’archives .zip
+zip                 # Compression d’archives .zip
+
+
+########################
+# ⚙️ System Monitoring & Inspection
+########################
+htop                # Surveillance interactive des processus
+ncdu                # Analyse et visualisation de l’espace disque
+neofetch            # Affiche les informations système de façon stylée
+lsb-release         # Informations sur la distribution Linux
+
+
+########################
+# 📂 File & Directory Tools
+########################
+tree                # Affichage arborescent des répertoires
+bat                 # Affichage de fichiers avec coloration syntaxique
+ripgrep             # Recherche ultra-rapide dans les fichiers (rg)
+fzf                 # Recherche floue dans les fichiers / historique
+
+
+########################
+# 🌐 Network & Data Tools
+########################
+net-tools           # Outils réseau classiques (ifconfig, netstat, etc.)
+dnsutils            # Outils DNS (dig, nslookup, host)
+jq                  # Manipulation de fichiers JSON
+
+
+########################
+# 🚧 Reserved for Future Extensions
+########################
+# Ces catégories seront complétées à mesure que le setup évolue :
+# - Development & Build Tools
+# - Scripting & Automation
+# - Containers & Virtualization
+# - System Services & Monitoring
+########################
