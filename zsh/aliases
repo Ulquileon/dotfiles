@@ -12,6 +12,7 @@ alias cdp='cd ~/code/personal'
 alias cds='cd ~/code/school'
 alias cdt='cd ~/code/training'
 alias cdtpl='cd ~/code/templates'
+alias cdf='cd ~/.files'
 alias cdb='cd ~/bin'
 alias cdd='cd ~/data'
 

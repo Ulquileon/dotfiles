@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # gclone owner/repo [dest]
 # Choisit automatiquement l'hôte SSH selon le dossier courant:
-#  - ~/code/personal/* -> github.com-personal
-#  - ~/code/school/*   -> github.com-school
+#  - ~/code/personal[/...] -> github.com-personal
+#  - ~/code/school[/...]   -> github.com-school
 # Par défaut: github.com-personal
 
 set -euo pipefail
@@ -12,20 +12,29 @@ usage(){ echo "Usage: gclone owner/repo [dest] | gclone git@... | gclone https:/
 
 arg="$1"; dest="${2:-}"
 
-# Détermine l'hôte
-case "$PWD" in
-  "$HOME/code/personal"/*) host="github.com-personal" ;;
-  "$HOME/code/school"/*)   host="github.com-school" ;;
-  *)                       host="github.com-personal" ;;
+# Résoudre PWD pour matcher aussi via symlinks
+if command -v realpath >/dev/null 2>&1; then
+  PWD_RESOLVED="$(realpath -m "$PWD")"
+else
+  PWD_RESOLVED="$PWD"
+fi
+
+# Déterminer l'hôte (match le dossier ET ses sous-dossiers)
+case "$PWD_RESOLVED" in
+  "$HOME/code/personal"|"$HOME/code/personal"/*) host="github.com-personal" ;;
+  "$HOME/code/school"|"$HOME/code/school"/*)     host="github.com-school" ;;
+  *)                                             host="github.com-personal" ;;
 esac
 
-# Construire l'URL
+# Construire l'URL normalisée
 build_url() {
   local in="$1"
-  # URL déjà complète SSH vers github.com -> remap vers host choisi
+  # Remap des URLs github.com -> alias choisi
   if [[ "$in" == git@github.com:* ]]; then
     echo "${in/git@github.com:/git@${host}:}"
-  # Autre URL complète (ssh d'un autre host, https...) -> garder tel quel
+  elif [[ "$in" == ssh://git@github.com/* ]]; then
+    echo "${in/ssh:\/\/git@github.com\//git@${host}:}"
+  # Autres URLs complètes: garder tel quel (git@autrehost:..., https://...)
   elif [[ "$in" =~ ^(git@|https?://) ]]; then
     echo "$in"
   else
