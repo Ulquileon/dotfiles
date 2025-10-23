@@ -1,0 +1,140 @@
+#!/usr/bin/env bash
+# ───────────────────────────────────────────────────────────────
+# 🔧 activate — activer/lister/créer des environnements virtuels Python
+#
+# Usage :
+#   activate <env_name>           # active l'environnement spécifié
+#   activate -c | --create <env>  # crée un environnement (python3 -m venv)
+#   activate -l | --list          # liste les environnements disponibles
+#   activate -u | --usage | -h    # affiche cette aide
+#
+# Notes :
+# - Les environnements sont stockés dans : ~/.files/venv/<env_name>
+# - Pour que l'activation touche TON shell courant, exécute via "source",
+#   ex. alias : alias av='source ~/.files/bin/activate'
+# ───────────────────────────────────────────────────────────────
+
+set -euo pipefail
+
+VENV_DIR="${HOME}/.files/venvs"
+
+usage() {
+  cat <<'EOF'
+Usage:
+  activate <env_name>            Active l'environnement virtuel spécifié
+  activate -c | --create <env>   Crée un nouvel environnement virtuel
+  activate -l | --list           Liste les environnements disponibles
+  activate -u | --usage | -h     Affiche cette aide
+
+Détails:
+- Les environnements sont stockés dans ~/.files/venv/<env_name>
+- La création utilise: python3 -m venv ~/.files/venv/<env_name>
+- Pour activer dans le shell courant, exécute via "source", ex:
+    alias av='source ~/.files/bin/activate'   # puis utilise: av <env>
+EOF
+}
+
+ensure_prereqs() {
+  # Vérifie python/venv minimal
+  if ! command -v python3 >/dev/null 2>&1; then
+    echo "❌ python3 introuvable. Installe-le (ex: sudo apt install -y python3 python3-venv python3-pip)." >&2
+    return 1
+  fi
+  # La plupart des distros activent venv avec python3-venv; on teste la création à la demande.
+}
+
+list_envs() {
+  echo "🧩 Environnements virtuels disponibles dans: ${VENV_DIR}"
+  if [ -d "${VENV_DIR}" ]; then
+    # Liste uniquement les dossiers contenant bin/activate
+    local found=0
+    while IFS= read -r -d '' d; do
+      basename "$d"
+      found=1
+    done < <(find "${VENV_DIR}" -mindepth 1 -maxdepth 1 -type d -exec test -f "{}/bin/activate" \; -print0 2>/dev/null || true)
+
+    if [ "$found" -eq 0 ]; then
+      echo "  (aucun venv pour l'instant)"
+    fi
+  else
+    echo "  (dossier ${VENV_DIR} absent)"
+  fi
+}
+
+activate_env() {
+  local env_name="${1:-}"
+  if [ -z "${env_name}" ]; then
+    echo "❌ Aucun environnement spécifié." >&2
+    usage; return 1
+  fi
+
+  local env_path="${VENV_DIR}/${env_name}"
+  if [ ! -f "${env_path}/bin/activate" ]; then
+    echo "❌ L'environnement '${env_name}' est introuvable dans ${VENV_DIR}." >&2
+    echo "ℹ️  Utilise 'activate -l' pour voir la liste, ou 'activate -c ${env_name}' pour le créer." >&2
+    return 1
+  fi
+
+  # Active dans le shell courant (nécessite que ce script soit source'd)
+  # shellcheck source=/dev/null
+  source "${env_path}/bin/activate"
+  # Affiche la version Python active pour feedback
+  if command -v python3 >/dev/null 2>&1; then
+    echo "✅ '${env_name}' activé — $(python3 --version)"
+  else
+    echo "✅ '${env_name}' activé."
+  fi
+}
+
+create_env() {
+  local env_name="${1:-}"
+  if [ -z "${env_name}" ]; then
+    echo "❌ Nom d'environnement manquant pour --create." >&2
+    usage; return 1
+  fi
+
+  ensure_prereqs
+
+  mkdir -p "${VENV_DIR}"
+  local env_path="${VENV_DIR}/${env_name}"
+
+  if [ -e "${env_path}" ]; then
+    echo "❌ '${env_name}' existe déjà à ${env_path}." >&2
+    echo "ℹ️  Choisis un autre nom ou supprime l'existant." >&2
+    return 1
+  fi
+
+  # Tentative de création
+  if ! python3 -m venv "${env_path}" 2>/tmp/activate_venv_err.log; then
+    echo "❌ Échec de création du venv. Détails :" >&2
+    cat /tmp/activate_venv_err.log >&2 || true
+    echo "💡 Astuce : sur Ubuntu/Debian, installe 'python3-venv' :" >&2
+    echo "    sudo apt update && sudo apt install -y python3-venv" >&2
+    return 1
+  fi
+
+  echo "✅ Environnement '${env_name}' créé à ${env_path}"
+  echo "→ Active-le avec : activate ${env_name}   (ou ton alias 'act ${env_name}')"
+}
+
+main() {
+  case "${1:-}" in
+    -u|--usage|-h) usage ;;
+    -l|--list)     list_envs ;;
+    -c|--create)
+      shift || true
+      create_env "${1:-}"
+      ;;
+    "")
+      echo "❌ Aucun argument fourni." >&2
+      usage; return 1
+      ;;
+    *)
+      activate_env "$1"
+      ;;
+  esac
+}
+
+# Si le script est "sourcé", on veut juste exposer les fonctions et exécuter la commande.
+# Appel direct de main dans tous les cas ; en mode `source`, les exports restent dans le shell.
+main "$@"

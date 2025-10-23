@@ -47,7 +47,6 @@ alias serve='python3 -m http.server'
 # 🐍 PYTHON
 ########################################
 alias py='python'  # alias générique pour python
-alias act='. .venv/bin/activate'    # Active un venv local
 alias pipup='pip install --upgrade pip'
 alias req='pip install -r requirements.txt'
 alias whichpython='python --version && which python'
@@ -118,6 +117,7 @@ alias stt="echo 'Launching VS Code...' && code ."
 alias jdev='~/.files/bin/jdev'
 alias gclone='~/.files/bin/gclone'
 alias doctor="~/.files/setup/dotfiles-doctor.sh"
+alias act="source ~/.files/bin/activate"
 
 # (Optionnel) — ouvre ton dossier .files ou bin
 alias cdfiles='cd -P ~/.files'
